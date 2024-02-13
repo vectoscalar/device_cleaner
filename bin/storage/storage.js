@@ -6,6 +6,7 @@
  */
 
 import { promises as fsPromises } from "fs";
+import path from "path";
 import chalk from "chalk";
 
 export class Storage {
@@ -34,22 +35,22 @@ export class Storage {
     }
   };
 
-  calculateDirectorySize = async (path) => {
+  calculateDirectorySize = async (dirPath) => {
     let totalSize = 0;
-    const files = await fsPromises.readdir(path, { withHidden: true });
+    const files = await fsPromises.readdir(dirPath, { withHidden: true });
 
     const sizeList = await Promise.all(
       files.flatMap(async (file) => {
-        const fullPath = `${path}\\${file}`;
+        const fullPath = path.join(dirPath, file);
 
         return await this.clearDirectoryAndGetSize(fullPath);
       })
     );
     sizeList?.forEach((size) => (totalSize += size));
     try {
-      await fsPromises.rmdir(path);
+      await fsPromises.rmdir(dirPath);
     } catch (err) {
-      console.error(`Error deleting directory ${path}`, err.message);
+      console.error(`Error deleting directory ${dirPath}`, err.message);
     }
     return totalSize;
   };

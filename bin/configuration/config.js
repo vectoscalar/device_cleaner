@@ -18,7 +18,7 @@ export const WindowsFileSystem = [
   },
   {
     name: "debug",
-    filePath: path.join(process.env.SystemRoot, "debug"),
+    filePath: path.join(process.env.SystemRoot || "", "debug"),
   },
   {
     name: "Google Chrome browser Cache",

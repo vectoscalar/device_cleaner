@@ -5,9 +5,6 @@
  * Description: Contains methods related to fs storage operations
  */
 
-import fs from "fs";
-import { rimraf } from "rimraf";
-import path from "path";
 import { promises as fsPromises } from "fs";
 import chalk from "chalk";
 

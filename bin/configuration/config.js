@@ -5,10 +5,6 @@ const homeDirectory = os.homedir();
 const tempDirectory = os.tmpdir();
 export const WindowsFileSystem = [
   {
-    name: "lelinux",
-    filePath: path.join(homeDirectory, "Desktop", "lelinux"),
-  },
-  {
     name: "TEMP",
     filePath: path.join(tempDirectory),
   },

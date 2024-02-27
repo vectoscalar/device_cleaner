@@ -10,12 +10,12 @@ export class Prompts {
     return value.length ? true : "Please enter a valid value.";
   };
 
-  promptCustomOrConfigPathSelection = () => [
+  promptDeleteAllOrManually = () => [
     {
       name: "deletionOption",
       type: "list",
       message: "Select deletion options from below",
-      choices: ["PreDefinedPaths", "CustomPaths"],
+      choices: ["Manually", "Delete All"],
       validate: this.validateNotEmpty,
     },
   ];

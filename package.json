@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "clear": "^0.1.0",
+    "cli-table": "^0.3.11",
     "clui": "^0.3.6",
     "figlet": "^1.7.0",
     "inquirer": "^9.2.14"

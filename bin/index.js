@@ -9,7 +9,7 @@ import { main } from "./app.js";
 
 clear();
 
-function printCliName() {
+async function printCliName() {
   console.log(
     chalk.yellowBright(
       figlet.textSync(CLINAME, {
@@ -20,7 +20,7 @@ function printCliName() {
 }
 
 async function run() {
-  printCliName();
+  await printCliName();
   await main();
 }
 

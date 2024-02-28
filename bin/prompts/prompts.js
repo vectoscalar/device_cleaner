@@ -12,7 +12,7 @@ export class Prompts {
 
   promptDeleteAllOrManually = () => [
     {
-      name: "deletionOption",
+      name: "Option",
       type: "list",
       message: "Select deletion options from below",
       choices: ["Manually", "Delete All"],
@@ -36,7 +36,7 @@ export class Prompts {
 
   promptOptionSelection = (message) => [
     {
-      name: "deletionOption",
+      name: "Option",
       type: "list",
       message,
       choices: ["YES", "NO"],

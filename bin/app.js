@@ -22,6 +22,7 @@ import { QuestionsPrompt } from "./inquirer.js";
 import { Storage } from "./storage/storage.js";
 import { formatBytes } from "./utils/utils.js";
 import { Prompts } from "./prompts/prompts.js";
+import { DELETION_OPTION, PROMPT_SELECTION } from "./constants/constant.js";
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function main() {
@@ -33,10 +34,14 @@ export async function main() {
   const spinner = new Spinner("");
 
   spinner.start();
-  await displayStorageData(storage, spinner);
+  const configWithData = await displayStorageData(storage, spinner);
   spinner.stop();
 
-  let { deletionPaths } = await handleDeletionOptions(questionsPrompt, prompts);
+  let { deletionPaths } = await handleDeletionOptions(
+    questionsPrompt,
+    prompts,
+    configWithData
+  );
 
   const confirmSelection = await questionsPrompt.prompt(
     prompts.promptOptionSelection(
@@ -48,6 +53,13 @@ export async function main() {
   await handleDeletion(confirmSelection, spinner, deletionPaths, storage);
 }
 
+/**
+ * Method to handle deletion of files and folders
+ * @param {*} confirmSelection
+ * @param {*} spinner
+ * @param {*} deletionPaths
+ * @param {*} storage
+ */
 async function handleDeletion(
   confirmSelection,
   spinner,
@@ -56,7 +68,7 @@ async function handleDeletion(
 ) {
   let totalSize = 0;
 
-  if (confirmSelection.deletionOption === "YES") {
+  if (confirmSelection.Option === PROMPT_SELECTION.YES) {
     spinner.start();
 
     for (const deletionPath of deletionPaths) {
@@ -77,19 +89,29 @@ async function handleDeletion(
   }
 }
 
+/**
+ * Method to display Storage information
+ * @param {*} storage
+ * @param {*} spinner
+ * @returns
+ */
 async function displayStorageData(storage, spinner) {
   let totalSize = 0;
+  let configWithData = [];
   for (const index in configs) {
     const size = await storage.clearDirectoryAndGetSize(
       configs[index].filePath,
       false
     );
-    table.push([+index + 1, configs[index].name, formatBytes(size)]);
-    totalSize += size;
+    if (size !== 0) {
+      table.push([+index + 1, configs[index].name, formatBytes(size)]);
+      configWithData.push(configs[index]);
+      totalSize += size;
+    }
   }
   spinner.stop();
   console.log(table.toString());
-  return totalSize;
+  return configWithData;
 }
 
 /**
@@ -98,23 +120,23 @@ async function displayStorageData(storage, spinner) {
  * @param {*} prompts
  * @returns
  */
-async function handleDeletionOptions(questionsPrompt, prompts) {
+async function handleDeletionOptions(questionsPrompt, prompts, configWithData) {
   let deletionPaths = [];
   let promptSelection = await questionsPrompt.prompt(
     prompts.promptDeleteAllOrManually(`Select from below options `)
   );
-  if (promptSelection.deletionOption === "Manually") {
-    for (const config of configs) {
+  if (promptSelection.Option === DELETION_OPTION.MANUALLY) {
+    for (const config of configWithData) {
       let promptSelection = await questionsPrompt.prompt(
         prompts.promptOptionSelection(`Do you want to delete ${config.name} `)
       );
-      if (promptSelection.deletionOption === "YES") {
+      if (promptSelection.Option === PROMPT_SELECTION.YES) {
         deletionPaths.push(config);
       }
     }
   } else {
     //delete all
-    deletionPaths = configs;
+    deletionPaths = configWithData;
   }
 
   return { deletionPaths };

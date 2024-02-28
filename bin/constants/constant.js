@@ -5,3 +5,12 @@ export const OS_TYPES = {
 };
 
 export const CLINAME = "DEVICE_CLEANER";
+export const DELETION_OPTION = {
+  MANUALLY: "Manually",
+  DELETE_ALL: "Delete All",
+};
+
+export const PROMPT_SELECTION = {
+  YES: "YES",
+  NO: "NO",
+};
